@@ -60,7 +60,7 @@ if "recipe_bank" not in st.session_state:
 # --- BRANDED INTERFACE CONFIGURATION ---
 st.set_page_config(page_title="CuraChef AI", page_icon="🍳", layout="centered")
 st.title("🍳 CuraChef Vault")
-st.write("Precision multimodal culinary analytics and real-time pan telemetry.")
+st.write("The multimodal sous chef with real-time pan telemetry.")
 
 # --- SIDEBAR: RECIPE SAVER & SELECTOR ---
 st.sidebar.header("📁 CuraChef Memory Vault")
