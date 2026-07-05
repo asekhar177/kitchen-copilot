@@ -62,9 +62,9 @@ def save_recipes(recipes):
 if "recipe_bank" not in st.session_state:
     st.session_state.recipe_bank = load_recipes()
 
-st.set_page_config(page_title="AI Sous Chef Copilot", page_icon="👩‍🍳", layout="centered")
+st.set_page_config(page_title="The Multimodal Sous Chef", page_icon="👩‍🍳", layout="centered")
 st.title("👩‍🍳 The Multimodal Sous Chef")
-st.write("Smart pocket sous chef with live on-screen saving capabilities.")
+st.write("Smart pocket sous chef with live on-screen saving capabilities. Developed by Arjun Sekhar, a culinary rookie.")
 
 # --- SIDEBAR: RECIPE SAVER & SELECTOR ---
 st.sidebar.header("📁 Recipe Memory Vault")
