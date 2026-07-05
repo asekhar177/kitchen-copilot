@@ -70,7 +70,7 @@ selected_recipe = st.sidebar.selectbox("Choose a recipe profile:", list(st.sessi
 st.sidebar.markdown("---")
 st.sidebar.subheader("💾 Create a New Recipe Profile")
 new_title = st.sidebar.text_input("Recipe Name:", placeholder="e.g., Creamy Garlic Prawns")
-new_steps = st.sidebar.text_area("Analytical Steps:", placeholder="1. Sauté garlic...\n2. Track emulsion...")
+new_steps = st.sidebar.text_area("Steps To Memorise:", placeholder="1. Sauté garlic...\n2. Track emulsion...")
 
 if st.sidebar.button("Save Recipe"):
     if new_title and new_steps:
@@ -82,7 +82,7 @@ if st.sidebar.button("Save Recipe"):
         st.sidebar.error("Please provide both a Name and Steps.")
 
 st.sidebar.markdown("---")
-if st.sidebar.button("🗑️ Reset Vault Defaults"):
+if st.sidebar.button("🗑️ Remove All Recipes"):
     if os.path.exists(JSON_FILE):
         os.remove(JSON_FILE)
     if "recipe_bank" in st.session_state:
@@ -94,7 +94,7 @@ default_text = st.session_state.recipe_bank[selected_recipe]
 
 # --- MAIN INTERFACE ---
 uploaded_image = st.file_uploader("Step 1: Capture live pan state (Photo)", type=["jpg", "jpeg", "png"])
-recipe_text = st.text_area("Step 2: Target Recipe Execution Guidelines", value=default_text, height=180, 
+recipe_text = st.text_area("Step 2: Recipe Steps", value=default_text, height=180, 
                            placeholder="Awaiting target instructions...")
 
 if st.button("Inspect My Pan"):
