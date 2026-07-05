@@ -17,12 +17,12 @@ JSON_FILE = "user_recipes.json"
 def load_recipes():
     """Loads recipes from the JSON file or initializes defaults if it doesn't exist."""
     default_recipes = {
-        "Aloo Tikki Chaat (Street-Style)": (
-            "1. Mash or grate completely cooled boiled potatoes. Mix with cornstarch, cumin, chaat masala, and salt. Shape into patties.\n"
-            "2. Heat 2 tbsp oil in a heavy pan over medium heat. Place tikkis down to shallow fry.\n"
-            "3. Shallow fry until the bottom turns deeply golden-brown and crispy. Flip gently.\n"
-            "4. Fry second side until matching crunchy texture. Press down slightly to maximize crispiness.\n"
-            "5. Remove and layer with yogurt, tamarind chutney, green chutney, red onions, and sev."
+        "Custom / Obscure Dish...": "",
+        "Classic Tomato Fusilli": (
+            "1. Boil fusilli in salted water until al dente, then drain.\n"
+            "2. In a separate pot, simmer tomato passata, garlic, and olive oil for 10 minutes.\n"
+            "3. Add the drained fusilli directly into the sauce pot. Toss vigorously on low heat for 1-2 minutes until every spiral is evenly coated, glossy, and the sauce adheres nicely to the ridges.\n"
+            "4. Garnish with fresh basil or grated parmesan and serve hot."
         ),
         "Citrus Marmalade (Chemistry-Based)": (
             "1. Simmer sliced citrus peel and pulp in water for 1.5 to 2 hours until tender and translucent.\n"
@@ -31,23 +31,19 @@ def load_recipes():
             "4. Continue boiling hard until foam subsides into a heavier, slower boil with large, glossy 'fish eye' bubbles.\n"
             "5. Test: Turn off heat. Drop onto chilled saucer. Push after 1 min; if it wrinkles, setting point (105°C) is reached.\n"
             "6. Rest 15 mins to settle peel evenly, then pour into sterile jars."
-        ),
-        "Fresh Egg Pasta Dough": (
-            "1. Mound flour, create a deep well in the center, and crack eggs directly inside.\n"
-            "2. Whisk eggs gently with a fork without breaking the outer flour walls.\n"
-            "3. Gradually drag flour into the center until a thick custard-like paste forms.\n"
-            "4. Collapse walls and bring dough together into a rough, shaggy ball.\n"
-            "5. Knead vigorously for 8-10 mins until completely smooth, silky, and elastic.\n"
-            "6. Wrap tightly in plastic wrap and let rest at room temperature for 30 minutes to relax gluten.\n"
-            "7. Roll thin via machine or rolling pin, then cut into shapes."
-        ),
-        "Custom / Obscure Dish...": ""
+        )
     }
     
     if os.path.exists(JSON_FILE):
         try:
             with open(JSON_FILE, "r") as f:
-                return json.load(f)
+                loaded = json.load(f)
+                # Force "Custom / Obscure Dish..." to be the first key, then append the rest
+                ordered_recipes = {"Custom / Obscure Dish...": ""}
+                for key, val in loaded.items():
+                    if key != "Custom / Obscure Dish...":
+                        ordered_recipes[key] = val
+                return ordered_recipes
         except:
             return default_recipes
     return default_recipes
@@ -62,7 +58,7 @@ if "recipe_bank" not in st.session_state:
     st.session_state.recipe_bank = load_recipes()
 
 st.set_page_config(page_title="AI Kitchen Co-Pilot", page_icon="👩‍🍳", layout="centered")
-st.title("👩‍🍳 Multi-Modal Kitchen Co-Pilot v3.0")
+st.title("👩‍🍳 Your Personal Sous Chef Is Ready!")
 st.write("Smart pocket sous-chef with live on-screen saving capabilities.")
 
 # --- SIDEBAR: RECIPE SAVER & SELECTOR ---
@@ -73,8 +69,8 @@ selected_recipe = st.sidebar.selectbox("Choose a recipe:", list(st.session_state
 
 st.sidebar.markdown("---")
 st.sidebar.subheader("💾 Save a New Recipe")
-new_title = st.sidebar.text_input("Recipe Name:", placeholder="e.g., Classic Tomato Fusilli")
-new_steps = st.sidebar.text_area("Steps / Instructions:", placeholder="1. Boil pasta...\n2. Simmer sauce...")
+new_title = st.sidebar.text_input("Recipe Name:", placeholder="e.g., Creamy Garlic Prawns")
+new_steps = st.sidebar.text_area("Steps / Instructions:", placeholder="1. Sauté garlic in butter...\n2. Add prawns...")
 
 if st.sidebar.button("Save to Memory Bank"):
     if new_title and new_steps:
