@@ -18,13 +18,13 @@ def load_recipes():
     """Loads recipes from the JSON file or initializes defaults if it doesn't exist."""
     default_recipes = {
         "Custom / Obscure Dish...": "",
-        "Classic Tomato Fusilli": (
+        "Classic Tomato Fusilli Pasta": (
             "1. Boil fusilli in salted water until al dente, then drain.\n"
             "2. In a separate pot, simmer tomato passata, garlic, and olive oil for 10 minutes.\n"
             "3. Add the drained fusilli directly into the sauce pot. Toss vigorously on low heat for 1-2 minutes until every spiral is evenly coated, glossy, and the sauce adheres nicely to the ridges.\n"
             "4. Garnish with fresh basil or grated parmesan and serve hot."
         ),
-        "Citrus Marmalade (Chemistry-Based)": (
+        "Citrus Marmalade": (
             "1. Simmer sliced citrus peel and pulp in water for 1.5 to 2 hours until tender and translucent.\n"
             "2. Add sugar and lemon juice over low heat; stir constantly until granules completely dissolve.\n"
             "3. Bring to a rapid, rolling boil on high heat. Watch for volatile, fast-popping foam.\n"
