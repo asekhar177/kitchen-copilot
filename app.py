@@ -34,19 +34,24 @@ def load_recipes():
         )
     }
     
+    # Start with our base defaults or loaded file
+    recipes_to_sort = default_recipes
     if os.path.exists(JSON_FILE):
         try:
             with open(JSON_FILE, "r") as f:
-                loaded = json.load(f)
-                # Force "Custom / Obscure Dish..." to be the first key, then append the rest
-                ordered_recipes = {"Custom / Obscure Dish...": ""}
-                for key, val in loaded.items():
-                    if key != "Custom / Obscure Dish...":
-                        ordered_recipes[key] = val
-                return ordered_recipes
+                recipes_to_sort = json.load(f)
         except:
-            return default_recipes
-    return default_recipes
+            recipes_to_sort = default_recipes
+
+    # 1. Anchor the Custom option at the very top
+    ordered_recipes = {"Custom / Obscure Dish...": ""}
+    
+    # 2. Extract, sort the remaining keys alphabetically, and append them
+    sorted_keys = sorted([k for k in recipes_to_sort.keys() if k != "Custom / Obscure Dish..."])
+    for key in sorted_keys:
+        ordered_recipes[key] = recipes_to_sort[key]
+        
+    return ordered_recipes
 
 def save_recipes(recipes):
     """Saves the recipe dictionary to the local JSON storage file."""
@@ -57,8 +62,8 @@ def save_recipes(recipes):
 if "recipe_bank" not in st.session_state:
     st.session_state.recipe_bank = load_recipes()
 
-st.set_page_config(page_title="AI Kitchen Copilot", page_icon="👩‍🍳", layout="centered")
-st.title("👩‍🍳 The Multi-Modal Sous Chef")
+st.set_page_config(page_title="AI Sous Chef Copilot", page_icon="👩‍🍳", layout="centered")
+st.title("👩‍🍳 The Multi-Modal Sous Chef Copilot")
 st.write("Smart pocket sous chef with live on-screen saving capabilities.")
 
 # --- SIDEBAR: RECIPE SAVER & SELECTOR ---
@@ -74,13 +79,22 @@ new_steps = st.sidebar.text_area("Steps / Instructions:", placeholder="1. Sauté
 
 if st.sidebar.button("Save to Memory Bank"):
     if new_title and new_steps:
-        # Add to session state and write to file
         st.session_state.recipe_bank[new_title] = new_steps
         save_recipes(st.session_state.recipe_bank)
         st.sidebar.success(f"'{new_title}' successfully saved!")
         st.rerun()  # Refresh app to update the dropdown instantly
     else:
         st.sidebar.error("Please fill out both the Name and Steps to save!")
+
+# --- TEMPORARY RESET BUTTON ---
+st.sidebar.markdown("---")
+if st.sidebar.button("🗑️ Clear Cache & Reset Defaults"):
+    if os.path.exists(JSON_FILE):
+        os.remove(JSON_FILE)
+    if "recipe_bank" in st.session_state:
+        del st.session_state.recipe_bank
+    st.sidebar.success("Cache cleared! Reloading defaults...")
+    st.rerun()
 
 # Set default text area content based on dropdown selection
 default_text = st.session_state.recipe_bank[selected_recipe]
