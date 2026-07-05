@@ -12,7 +12,7 @@ def encode_image(uploaded_file):
     return base64.b64encode(uploaded_file.read()).decode("utf-8")
 
 # --- FILE PATH FOR MEMORY ---
-JSON_FILE = "user_recipes.json"
+JSON_FILE = "curachef_recipes.json"
 
 def load_recipes():
     """Loads recipes from the JSON file or initializes defaults if it doesn't exist."""
@@ -34,7 +34,6 @@ def load_recipes():
         )
     }
     
-    # Start with our base defaults or loaded file
     recipes_to_sort = default_recipes
     if os.path.exists(JSON_FILE):
         try:
@@ -43,10 +42,7 @@ def load_recipes():
         except:
             recipes_to_sort = default_recipes
 
-    # 1. Anchor the Custom option at the very top
     ordered_recipes = {"Custom / Obscure Dish...": ""}
-    
-    # 2. Extract, sort the remaining keys alphabetically, and append them
     sorted_keys = sorted([k for k in recipes_to_sort.keys() if k != "Custom / Obscure Dish..."])
     for key in sorted_keys:
         ordered_recipes[key] = recipes_to_sort[key]
@@ -58,74 +54,71 @@ def save_recipes(recipes):
     with open(JSON_FILE, "w") as f:
         json.dump(recipes, f, indent=4)
 
-# Load current state of the recipe bank into local memory
 if "recipe_bank" not in st.session_state:
     st.session_state.recipe_bank = load_recipes()
 
-st.set_page_config(page_title="The Multimodal Sous Chef", page_icon="👩‍🍳", layout="centered")
-st.title("👩‍🍳 The Multimodal Sous Chef")
-st.write("Smart pocket sous chef with live on-screen saving capabilities. Developed by Arjun Sekhar, a culinary rookie.")
+# --- BRANDED INTERFACE CONFIGURATION ---
+st.set_page_config(page_title="CuraChef AI", page_icon="🍳", layout="centered")
+st.title("🍳 CuraChef Vault")
+st.write("Precision multimodal culinary analytics and real-time pan telemetry.")
 
 # --- SIDEBAR: RECIPE SAVER & SELECTOR ---
-st.sidebar.header("📁 Recipe Memory Vault")
+st.sidebar.header("📁 CuraChef Memory Vault")
 
-# Dropdown to choose existing recipes
-selected_recipe = st.sidebar.selectbox("Choose a recipe:", list(st.session_state.recipe_bank.keys()))
+selected_recipe = st.sidebar.selectbox("Choose a recipe profile:", list(st.session_state.recipe_bank.keys()))
 
 st.sidebar.markdown("---")
-st.sidebar.subheader("💾 Save a New Recipe")
+st.sidebar.subheader("💾 Create a New Recipe Profile")
 new_title = st.sidebar.text_input("Recipe Name:", placeholder="e.g., Creamy Garlic Prawns")
-new_steps = st.sidebar.text_area("Steps / Instructions:", placeholder="1. Sauté garlic in butter...\n2. Add prawns...")
+new_steps = st.sidebar.text_area("Analytical Steps:", placeholder="1. Sauté garlic...\n2. Track emulsion...")
 
-if st.sidebar.button("Save to Memory Bank"):
+if st.sidebar.button("Commit to Vault"):
     if new_title and new_steps:
         st.session_state.recipe_bank[new_title] = new_steps
         save_recipes(st.session_state.recipe_bank)
-        st.sidebar.success(f"'{new_title}' successfully saved!")
-        st.rerun()  # Refresh app to update the dropdown instantly
+        st.sidebar.success(f"'{new_title}' successfully committed!")
+        st.rerun()
     else:
-        st.sidebar.error("Please fill out both the Name and Steps to save!")
+        st.sidebar.error("Please provide both a Name and Steps.")
 
-# --- TEMPORARY RESET BUTTON ---
 st.sidebar.markdown("---")
-if st.sidebar.button("🗑️ Clear Cache & Reset Defaults"):
+if st.sidebar.button("🗑️ Reset Vault Defaults"):
     if os.path.exists(JSON_FILE):
         os.remove(JSON_FILE)
     if "recipe_bank" in st.session_state:
         del st.session_state.recipe_bank
-    st.sidebar.success("Cache cleared! Reloading defaults...")
+    st.sidebar.success("Vault wiped. Reloading factory defaults...")
     st.rerun()
 
-# Set default text area content based on dropdown selection
 default_text = st.session_state.recipe_bank[selected_recipe]
 
 # --- MAIN INTERFACE ---
-uploaded_image = st.file_uploader("Step 1: Upload your cooking photo", type=["jpg", "jpeg", "png"])
-recipe_text = st.text_area("Step 2: Active Recipe Instructions", value=default_text, height=180, 
-                           placeholder="Type, paste, or select your recipe guidelines above...")
+uploaded_image = st.file_uploader("Step 1: Capture live pan state (Photo)", type=["jpg", "jpeg", "png"])
+recipe_text = st.text_area("Step 2: Target Recipe Execution Guidelines", value=default_text, height=180, 
+                           placeholder="Awaiting target instructions...")
 
-if st.button("Inspect My Pan"):
+if st.button("Run Pan Telemetry Analysis"):
     if not uploaded_image:
-        st.error("Please upload a photo of your pan first!")
+        st.error("Missing physical pan image data!")
     elif not recipe_text:
-        st.error("Please add or select your recipe instructions!")
+        st.error("Missing recipe guideline parameters!")
     else:
-        with st.spinner("Chef is analyzing your dish... Please wait."):
+        with st.spinner("Processing visual data against recipe parameters..."):
             try:
                 base64_image = encode_image(uploaded_image)
                 
                 system_prompt = (
-                    "You are an expert Michelin-star sous chef. Your job is to analyze live kitchen photos "
-                    f"and guide a cook based explicitly on the provided recipe guidelines.\n\n"
-                    f"--- TARGET RECIPE ---\n{recipe_text}\n---------------------"
+                    "You are the CuraChef analytical system, an elite precision culinary agent. "
+                    "Analyze physical cooking progress solely using the verified target guidelines provided.\n\n"
+                    f"--- TARGET PARAMETERS ---\n{recipe_text}\n---------------------"
                 )
                 
                 user_prompt = (
-                    "Analyze this pan image in the context of the provided recipe.\n"
-                    "Provide your analysis in exactly three short sections:\n"
-                    "1. CURRENT STATUS & RECIPE MATCH: (Identify which step of the recipe the pan appears to be on.)\n"
-                    "2. VERDICT: (Choose exactly one: [UNDER-COOKED / KEEP SIMMERING], [PERFECT / MOVE TO NEXT STEP], or [DANGER / BURNING])\n"
-                    "3. NEXT ACTION: (State exactly what the cook needs to do next.)"
+                    "Perform step-matching telemetry on this pan state.\n"
+                    "Output exactly three concise evaluation fields:\n"
+                    "1. CURRENT STATUS & RECIPE MATCH: (Identify current step alignment.)\n"
+                    "2. VERDICT: (Must be exactly one: [UNDER-COOKED / KEEP SIMMERING], [PERFECT / MOVE TO NEXT STEP], or [DANGER / BURNING])\n"
+                    "3. NEXT ACTION: (Prescribe immediate chemical or physical correction step.)"
                 )
 
                 response = client.chat.completions.create(
@@ -143,9 +136,9 @@ if st.button("Inspect My Pan"):
                     max_tokens=350
                 )
                 
-                st.success("Analysis Complete!")
-                st.markdown("### 🍳 Chef's Feedback")
+                st.success("Telemetry complete!")
+                st.markdown("### 📊 CuraChef System Diagnostics")
                 st.write(response.choices[0].message.content)
                 
             except Exception as e:
-                st.error(f"An error occurred: {e}")
+                st.error(f"Analysis error: {e}")
