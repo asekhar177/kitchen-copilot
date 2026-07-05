@@ -72,7 +72,7 @@ st.sidebar.subheader("💾 Create a New Recipe Profile")
 new_title = st.sidebar.text_input("Recipe Name:", placeholder="e.g., Creamy Garlic Prawns")
 new_steps = st.sidebar.text_area("Analytical Steps:", placeholder="1. Sauté garlic...\n2. Track emulsion...")
 
-if st.sidebar.button("Inspect My Pan"):
+if st.sidebar.button("Save Recipe"):
     if new_title and new_steps:
         st.session_state.recipe_bank[new_title] = new_steps
         save_recipes(st.session_state.recipe_bank)
@@ -97,7 +97,7 @@ uploaded_image = st.file_uploader("Step 1: Capture live pan state (Photo)", type
 recipe_text = st.text_area("Step 2: Target Recipe Execution Guidelines", value=default_text, height=180, 
                            placeholder="Awaiting target instructions...")
 
-if st.button("Run Pan Analysis"):
+if st.button("Inspect My Pan"):
     if not uploaded_image:
         st.error("Missing physical pan image data!")
     elif not recipe_text:
