@@ -57,9 +57,9 @@ def save_recipes(recipes):
 if "recipe_bank" not in st.session_state:
     st.session_state.recipe_bank = load_recipes()
 
-st.set_page_config(page_title="AI Kitchen Co-Pilot", page_icon="👩‍🍳", layout="centered")
-st.title("👩‍🍳 Your Personal Sous Chef Is Ready!")
-st.write("Smart pocket sous-chef with live on-screen saving capabilities.")
+st.set_page_config(page_title="AI Kitchen Copilot", page_icon="👩‍🍳", layout="centered")
+st.title("👩‍🍳 The Multi-Modal Sous Chef")
+st.write("Smart pocket sous chef with live on-screen saving capabilities.")
 
 # --- SIDEBAR: RECIPE SAVER & SELECTOR ---
 st.sidebar.header("📁 Recipe Memory Vault")
