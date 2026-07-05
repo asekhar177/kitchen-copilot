@@ -58,12 +58,12 @@ if "recipe_bank" not in st.session_state:
     st.session_state.recipe_bank = load_recipes()
 
 # --- BRANDED INTERFACE CONFIGURATION ---
-st.set_page_config(page_title="CuraChef AI", page_icon="🍳", layout="centered")
-st.title("🍳 CuraChef Vault")
-st.write("The multimodal sous chef with real-time pan telemetry.")
+st.set_page_config(page_title="CuraChef AI | Smart Pocket Sous Chef", page_icon="🍳", layout="centered")
+st.title("🍳 CuraChef Studio")
+st.write("The multimodal sous chef with real-time pan monitoring.")
 
 # --- SIDEBAR: RECIPE SAVER & SELECTOR ---
-st.sidebar.header("📁 CuraChef Memory Vault")
+st.sidebar.header("📁 Recipe Profiles")
 
 selected_recipe = st.sidebar.selectbox("Choose a recipe profile:", list(st.session_state.recipe_bank.keys()))
 
@@ -72,7 +72,7 @@ st.sidebar.subheader("💾 Create a New Recipe Profile")
 new_title = st.sidebar.text_input("Recipe Name:", placeholder="e.g., Creamy Garlic Prawns")
 new_steps = st.sidebar.text_area("Analytical Steps:", placeholder="1. Sauté garlic...\n2. Track emulsion...")
 
-if st.sidebar.button("Commit to Vault"):
+if st.sidebar.button("Inspect My Pan"):
     if new_title and new_steps:
         st.session_state.recipe_bank[new_title] = new_steps
         save_recipes(st.session_state.recipe_bank)
