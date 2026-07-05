@@ -63,7 +63,7 @@ if "recipe_bank" not in st.session_state:
     st.session_state.recipe_bank = load_recipes()
 
 st.set_page_config(page_title="AI Sous Chef Copilot", page_icon="👩‍🍳", layout="centered")
-st.title("👩‍🍳 The Multi-Modal Sous Chef Copilot")
+st.title("👩‍🍳 The Multimodal Sous Chef")
 st.write("Smart pocket sous chef with live on-screen saving capabilities.")
 
 # --- SIDEBAR: RECIPE SAVER & SELECTOR ---
