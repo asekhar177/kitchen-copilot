@@ -97,7 +97,7 @@ uploaded_image = st.file_uploader("Step 1: Capture live pan state (Photo)", type
 recipe_text = st.text_area("Step 2: Target Recipe Execution Guidelines", value=default_text, height=180, 
                            placeholder="Awaiting target instructions...")
 
-if st.button("Run Pan Telemetry Analysis"):
+if st.button("Run Pan Analysis"):
     if not uploaded_image:
         st.error("Missing physical pan image data!")
     elif not recipe_text:
